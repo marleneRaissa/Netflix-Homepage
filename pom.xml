@@ -9,6 +9,14 @@
   <url>http://maven.apache.org</url>
   <build>
     <finalName>webapp</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/webapp/images</directory>
+      </resource>
+      <resource>
+        <directory>src/main/webapp/css</directory>
+      </resource>
+    </resources>
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
