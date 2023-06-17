@@ -25,6 +25,16 @@
             <configuration>
                 <warSourceDirectory>src/main/webapp</warSourceDirectory>
                 <failOnMissingWebXml>false</failOnMissingWebXml>
+                <webResources>
+                  <resource>
+                    <directory>src/main/webapp/css</directory>
+                    <targetPath>css</targetPath>
+                  </resource>
+                  <resource>
+                    <directory>src/main/webapp/images</directory>
+                    <targetPath>images</targetPath>
+                  </resource>
+                </webResources>
             </configuration>
         </plugin>
     </plugins>
