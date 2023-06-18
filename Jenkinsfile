@@ -10,9 +10,9 @@ pipeline {
             steps {
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: '*/master']],
+                    branches: [[name: '*/main']],
                     extensions: [],
-                    userRemoteConfigs: [[url: 'https://github.com/sambit81/Hello-World-Maven.git']]
+                    userRemoteConfigs: [[url: 'https://github.com/sambit81/Netflix-Homepage.git']]
                 ])
             }
         }
@@ -42,9 +42,7 @@ pipeline {
                             sourceFiles: 'target/*.war'
                         )
                     ]),
-                    usePromotionTimestamp: false,
-                    useWorkspaceInPromotion: false,
-                    verbose: false
+                    sshPublisherDesc(usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)
                 ])
             }
         }
@@ -72,9 +70,7 @@ pipeline {
                             sourceFiles: ''
                         )
                     ]),
-                    usePromotionTimestamp: false,
-                    useWorkspaceInPromotion: false,
-                    verbose: false
+                    sshPublisherDesc(usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)
                 ])
             }
         }
@@ -101,9 +97,7 @@ pipeline {
                             sourceFiles: ''
                         )
                     ]),
-                    usePromotionTimestamp: false,
-                    useWorkspaceInPromotion: false,
-                    verbose: false
+                    sshPublisherDesc(usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)
                 ])
             }
         }
