@@ -30,7 +30,7 @@ pipeline {
                         sshTransfer(
                             cleanRemote: false,
                             excludes: '',
-                            execCommand: 'docker login --username sambits --password-stdin < /etc/docker-password.txt',
+                            execCommand: '',
                             execTimeout: 120000,
                             flatten: false,
                             makeEmptyDirs: false,
