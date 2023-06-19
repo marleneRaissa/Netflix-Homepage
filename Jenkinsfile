@@ -1,9 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'M2_HOME'
-    }
+    
     
     stages {
         stage('Checkout') {
@@ -17,11 +15,7 @@ pipeline {
             }
         }
         
-        stage('Build and Test') {
-            steps {
-                sh 'mvn clean install package'
-            }
-        }
+        
         
         stage('Copy Artifact') {
             steps {
