@@ -19,25 +19,33 @@ pipeline {
         
         stage('Copy Artifact') {
             steps {
-                sshPublisher(publishers: [
-                    sshPublisherDesc(configName: 'Ansible-Server', transfers: [
-                        sshTransfer(
-                            cleanRemote: false,
-                            excludes: '',
-                            execCommand: '',
-                            execTimeout: 120000,
-                            flatten: false,
-                            makeEmptyDirs: false,
-                            noDefaultExcludes: false,
-                            patternSeparator: '[, ]+',
-                            remoteDirectory: '//opt//docker',
-                            remoteDirectorySDF: false,
-                            removePrefix: 'target',
-                            sourceFiles: 'target/*.war'
-                        )
-                    ]),
-                    sshPublisherDesc(usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)
-                ])
+                sshPublisher(
+  publishers: [
+    sshPublisherDesc(
+      configName: 'Ansible-Server',
+      transfers: [
+        sshTransfer(
+          cleanRemote: false,
+          excludes: '',
+          execCommand: '',
+          execTimeout: 120000,
+          flatten: false,
+          makeEmptyDirs: false,
+          noDefaultExcludes: false,
+          patternSeparator: '[, ]+',
+          remoteDirectory: '//opt//docker',
+          remoteDirectorySDF: false,
+          removePrefix: 'target',
+          sourceFiles: 'target/*.war'
+        )
+      ],
+      usePromotionTimestamp: false,
+      useWorkspaceInPromotion: false,
+      verbose: false
+    )
+  ]
+)
+
             }
         }
 
