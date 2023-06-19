@@ -69,7 +69,9 @@ pipeline {
             }
         }
 
-        sshPublisher(
+        stage('Run Docker Container') {
+            steps {
+                sshPublisher(
   publishers: [
     sshPublisherDesc(
       configName: 'Ansible-Server',
@@ -99,6 +101,8 @@ pipeline {
   ]
 )
 
+            }
+        }
         
     }
 }
