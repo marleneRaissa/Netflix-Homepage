@@ -68,32 +68,37 @@ pipeline {
                 ])
             }
         }
+
+        sshPublisher(
+  publishers: [
+    sshPublisherDesc(
+      configName: 'Ansible-Server',
+      transfers: [
+        sshTransfer(
+          cleanRemote: false,
+          excludes: '',
+          execCommand: '''
+            cd /opt/playbooks/
+            ansible-playbook start_container.yaml --extra-vars "ansible_sudo_pass=ansible"
+          ''',
+          execTimeout: 120000,
+          flatten: false,
+          makeEmptyDirs: false,
+          noDefaultExcludes: false,
+          patternSeparator: '[, ]+',
+          remoteDirectory: '',
+          remoteDirectorySDF: false,
+          removePrefix: '',
+          sourceFiles: ''
+        )
+      ],
+      usePromotionTimestamp: false,
+      useWorkspaceInPromotion: false,
+      verbose: false
+    )
+  ]
+)
+
         
-        stage('Run Docker Container') {
-            steps {
-                sshPublisher(publishers: [
-                    sshPublisherDesc(configName: 'Ansible-Server', transfers: [
-                        sshTransfer(
-                            cleanRemote: false,
-                            excludes: '',
-                            execCommand: '''
-                                cd /opt/playbooks/
-                                ansible-playbook start_container.yaml --extra-vars "ansible_sudo_pass=ansible"
-                            ''',
-                            execTimeout: 120000,
-                            flatten: false,
-                            makeEmptyDirs: false,
-                            noDefaultExcludes: false,
-                            patternSeparator: '[, ]+',
-                            remoteDirectory: '',
-                            remoteDirectorySDF: false,
-                            removePrefix: '',
-                            sourceFiles: ''
-                        )
-                    ]),
-                    sshPublisherDesc(usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)
-                ])
-            }
-        }
     }
 }
