@@ -43,29 +43,37 @@ pipeline {
 
         stage('Upload to Docker Hub') {
             steps {
-                sshPublisher(publishers: [
-                    sshPublisherDesc(configName: 'Ansible-Server', transfers: [
-                        sshTransfer(
-                            cleanRemote: false,
-                            excludes: '',
-                            execCommand: '''
-                                cd /opt/docker
-                                docker build -t sambits/netflix:latest .
-                                docker push sambits/netflix:latest
-                            ''',
-                            execTimeout: 120000,
-                            flatten: false,
-                            makeEmptyDirs: false,
-                            noDefaultExcludes: false,
-                            patternSeparator: '[, ]+',
-                            remoteDirectory: '',
-                            remoteDirectorySDF: false,
-                            removePrefix: '',
-                            sourceFiles: ''
-                        )
-                    ]),
-                    sshPublisherDesc(usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)
-                ])
+                sshPublisher(
+  publishers: [
+    sshPublisherDesc(
+      configName: 'Ansible-Server',
+      transfers: [
+        sshTransfer(
+          cleanRemote: false,
+          excludes: '',
+          execCommand: '''
+            cd /opt/docker
+            docker build -t sambits/netflix:latest .
+            docker push sambits/netflix:latest
+          ''',
+          execTimeout: 120000,
+          flatten: false,
+          makeEmptyDirs: false,
+          noDefaultExcludes: false,
+          patternSeparator: '[, ]+',
+          remoteDirectory: '',
+          remoteDirectorySDF: false,
+          removePrefix: '',
+          sourceFiles: ''
+        )
+      ],
+      usePromotionTimestamp: false,
+      useWorkspaceInPromotion: false,
+      verbose: false
+    )
+  ]
+)
+
             }
         }
 
