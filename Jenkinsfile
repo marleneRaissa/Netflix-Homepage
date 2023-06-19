@@ -1,7 +1,9 @@
 pipeline {
     agent any
 
-    
+    tools {
+        maven 'M2_HOME'
+    }
     
     stages {
         stage('Checkout') {
@@ -12,6 +14,12 @@ pipeline {
                     extensions: [],
                     userRemoteConfigs: [[url: 'https://github.com/sambit81/Netflix-Homepage.git']]
                 ])
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                sh 'mvn clean install package'
             }
         }
         
