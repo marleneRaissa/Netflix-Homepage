@@ -66,6 +66,7 @@ pipeline {
                                     excludes: '',
                                     execCommand: '''
                                         cd /opt/docker
+                                        docker image prune -a --force
                                         docker build -t sambits/netflix .
                                         docker push sambits/netflix
                                     ''',
