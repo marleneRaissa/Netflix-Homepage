@@ -66,8 +66,8 @@ pipeline {
                                     excludes: '',
                                     execCommand: '''
                                         cd /opt/docker
-                                        docker build -t sambits/netflix:latest .
-                                        docker push sambits/netflix:latest
+                                        docker build -t sambits/netflix:${env.BUILD_NUMBER} .
+                                        docker push sambits/netflix:${env.BUILD_NUMBER}
                                     ''',
                                     execTimeout: 120000,
                                     flatten: false,
@@ -101,7 +101,7 @@ pipeline {
                                     excludes: '',
                                     execCommand: '''
                                         cd /opt/playbooks/
-                                        ansible-playbook start_container.yaml --extra-vars "ansible_sudo_pass=$(cat /etc/password)"
+                                        ansible-playbook start_container.yaml --extra-vars "ansible_sudo_pass=$(cat /etc/password)" -e "BUILD_NUMBER=${env.BUILD_NUMBER}"
                                     ''',
                                     execTimeout: 120000,
                                     flatten: false,
