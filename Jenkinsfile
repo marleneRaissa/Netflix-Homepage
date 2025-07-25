@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'M2_HOME'
+        maven 'apache-maven-4.0.0-rc-4'
+        jdk 'jdk17'
     }
 
     stages {
