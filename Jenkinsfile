@@ -6,6 +6,10 @@ pipeline {
         jdk 'java-17.0.15'
     }
 
+    environment {
+        LOCAL_BUILD_DIR = '/tmp/build-netflix-homepage'
+    }
+    
     stages {
         stage('Checkout') {
             steps {
