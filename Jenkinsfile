@@ -25,24 +25,20 @@ pipeline {
             }
         }
         
-        stage('Préparer') {
+        stage('Build in Temporary Directory') {
             steps {
-                echo "Création d'un répertoire temporaire local"
-                sh 'mkdir -p /tmp/build-netflix-homepage'
-            }
-        }
-
-        stage('Copier le code source') {
-            steps {
-                // Copie le contenu du workspace Jenkins vers un dossier local
-                sh 'cp -r $WORKSPACE/* /tmp/build-netflix-homepage/'
-            }
-        }
-
-        stage('Build Maven local') {
-            steps {
-                dir('/tmp/build-netflix-homepage') {
-                    sh 'mvn clean install'
+                script {
+                    sh '''
+                        set -e
+                        rm -rf $LOCAL_BUILD_DIR
+                        mkdir -p $LOCAL_BUILD_DIR
+                        cp -r $WORKSPACE/* $LOCAL_BUILD_DIR/
+                    '''
+                    dir("${env.LOCAL_BUILD_DIR}") {
+                        sh 'mvn clean install'
+                    }
+                    // Copier le fichier WAR dans le workspace pour qu'il soit transféré ensuite
+                    sh 'mkdir -p $WORKSPACE/target && cp $LOCAL_BUILD_DIR/target/*.war $WORKSPACE/target/'
                 }
             }
         }
@@ -89,6 +85,7 @@ pipeline {
                                     cleanRemote: false,
                                     excludes: '',
                                     execCommand: '''
+                                        set -x
                                         cd /opt/docker
                                         docker image prune -a --force
                                         docker build -t my_tomcat_image:v1 .
@@ -126,6 +123,7 @@ pipeline {
                                     cleanRemote: false,
                                     excludes: '',
                                     execCommand: '''
+                                        set -x
                                         cd /opt/playbooks/
                                         ansible-playbook start_container.yaml --extra-vars "ansible_sudo_pass=$(cat /etc/password)"
                                     ''',
