@@ -91,8 +91,9 @@ pipeline {
                                     execCommand: '''
                                         cd /opt/docker
                                         docker image prune -a --force
-                                        docker build -t sambits/netflix .
-                                        docker push sambits/netflix
+                                        docker build -t my_tomcat_image:v1 .
+                                        docker tag my_tomcat_image:v1 marleneraissa/my_tomcat_image_netflix:v1
+                                        docker push marleneraissa/my_tomcat_image_netflix:v1
                                     ''',
                                     execTimeout: 120000,
                                     flatten: false,
