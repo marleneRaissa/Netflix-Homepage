@@ -25,9 +25,25 @@ pipeline {
             }
         }
         
-        stage('Build and Test') {
+        stage('Préparer') {
             steps {
-                sh 'mvn clean install'
+                echo "Création d'un répertoire temporaire local"
+                sh 'mkdir -p /tmp/build-netflix-homepage'
+            }
+        }
+
+        stage('Copier le code source') {
+            steps {
+                // Copie le contenu du workspace Jenkins vers un dossier local
+                sh 'cp -r $WORKSPACE/* /tmp/build-netflix-homepage/'
+            }
+        }
+
+        stage('Build Maven local') {
+            steps {
+                dir('/tmp/build-netflix-homepage') {
+                    sh 'mvn clean install'
+                }
             }
         }
 
