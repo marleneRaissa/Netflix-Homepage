@@ -129,7 +129,7 @@ pipeline {
                                     execCommand: '''
                                         set -x
                                         cd /opt/playbooks/
-                                        ansible-playbook start_container.yaml --extra-vars "ansible_sudo_pass=$(cat /etc/password)"
+                                        ansible-playbook start_container.yaml
                                     ''',
                                     execTimeout: 120000,
                                     flatten: false,
