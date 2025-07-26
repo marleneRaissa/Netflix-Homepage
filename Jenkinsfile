@@ -136,7 +136,7 @@ pipeline {
                                         set -x
                                         echo "$VAULT_PASS" > /tmp/.vault_pass.txt
                                         chmod 600 /tmp/.vault_pass.txt
-                                        sudo -u ansible-admin ansible-playbook /opt/playbooks/start_container.yml --vault-password-file /tmp/.vault_pass.txt -vvv >
+                                        ansible-playbook /opt/playbooks/start_container.yml --vault-password-file /tmp/.vault_pass.txt
                                         rm -f /tmp/.vault_pass.txt
                                     ''',
                                     execTimeout: 120000,
