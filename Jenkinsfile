@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-#    tools {
-#        maven 'apache-maven-4.0.0-rc-4'
-#        jdk 'java-17.0.15'
-#    }
-
     environment {
         LOCAL_BUILD_DIR = '/tmp/build-netflix-homepage'
     }
