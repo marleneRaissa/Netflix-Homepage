@@ -136,19 +136,9 @@ pipeline {
                                     excludes: '',
                                     execCommand: '''
                                         set -x
-                                        cd /opt/playbooks || exit 1
-                                        VAULT_PASS_FILE=$(mktemp /tmp/.vault_pass_XXXXXX.txt)
-                                    
-                                        # Écriture sécurisée du mot de passe
-                                        echo -n "${env.VAULT_PASS}" > "\${VAULT_PASS_FILE}"
-                                        chmod 600 "\${VAULT_PASS_FILE}"
-                                    
-                                        # Vérification que le fichier n'est pas vide
-                                        if [ ! -s "\${VAULT_PASS_FILE}" ]; then
-                                           echo "ERROR: Vault password file is empty!"
-                                           exit 1
-                                        fi
-                                        
+                                        cd /opt/playbooks
+                                        echo "${env.VAULT_PASS}" > /tmp/.vault_pass.txt
+                                        chmod 600 /tmp/.vault_pass.txt
                                         ansible-playbook start_container.yaml --vault-password-file /tmp/.vault_pass.txt
                                         rm -f "\${VAULT_PASS_FILE}"
                                     ''',
