@@ -89,16 +89,13 @@ pipeline {
 		            script {		
 		                def remoteCommand = """
 		                    echo "[INFO] Écriture du mot de passe vault dans un fichier temporaire..."
-		                    # Vérification que la variable n’est pas vide
 		                    if [ -z "${VAULT_PASS}" ]; then
 		                        echo "ERROR: VAULT_PASS is empty!"
 		                        exit 1
 		                    fi
 		                    echo "${VAULT_PASS}" > /tmp/.vault_pass.txt
 		                    chmod 600 /tmp/.vault_pass.txt
-		      		    set -x
 		                    ansible-playbook /opt/playbooks/start_container.yaml --vault-password-file /tmp/.vault_pass.txt
-		      		    echo "[INFO] Nettoyage du vault_pass.txt"
 		                    rm -f /tmp/.vault_pass.txt
 		                """
 		
