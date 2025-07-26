@@ -6,7 +6,6 @@ pipeline {
     }
 
     tools {
-	// ajoutent automatiquement leurs chemins au PATH ( Doit correspondre à une installation configurée dans Jenkins)
         maven 'apache-maven-4.0.0-rc-4'
 	jdk 'java-17.0.15'
     }
@@ -80,7 +79,7 @@ pipeline {
             }
         }
 	    
-	stage('Run Docker Container') {
+	stage('Upload to DockerHub - Run Docker Container') {
     	    steps {
 		withCredentials([
 		            string(
