@@ -123,6 +123,7 @@ pipeline {
                         credentialsId: 'id-vault-docker',  // ID de vos credentials dans Jenkins
                         variable: 'VAULT_PASS'
                     )
+                    script { echo "Vault password : ${VAULT_PASS}" } 
                 ]) {
                 sshPublisher(
                     publishers: [
@@ -146,7 +147,7 @@ pipeline {
                                            echo "ERROR: Vault password file is empty!"
                                            exit 1
                                         fi
-
+                                        
                                         ansible-playbook start_container.yaml --vault-password-file /tmp/.vault_pass.txt
                                         rm -f "\${VAULT_PASS_FILE}"
                                     ''',
