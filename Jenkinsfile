@@ -16,13 +16,6 @@ pipeline {
                 ])
             }
         }
-
-        stage('Initialize'){
-            steps{
-                echo "PATH = ${M2_HOME}/bin:${PATH}"
-                echo "M2_HOME = /opt/apache-maven-4.0.0-rc-4"
-            }
-        }
         
         stage('Build in Temporary Directory') {
             steps {
