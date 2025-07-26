@@ -77,101 +77,60 @@ pipeline {
                 )
             }
         }
+	    
+	stage('Run Docker Container') {
+    		steps {
+		        withCredentials([
+		            string(
+		                credentialsId: 'id-vault-docker',
+		                variable: 'VAULT_PASS'
+		            )
+		        ]) {
+		            script {
+		                echo "Vault password: ${VAULT_PASS.length()} characters"
+		
+		                def remoteCommand = """
+		                    set -x
+		
+		                    # Vérification que la variable n’est pas vide
+		                    if [ -z "${VAULT_PASS}" ]; then
+		                        echo "ERROR: VAULT_PASS is empty!"
+		                        exit 1
+		                    fi
+		
+		                    cd /opt/playbooks
+		                    echo "${VAULT_PASS}" > /tmp/.vault_pass.txt
+		                    chmod 600 /tmp/.vault_pass.txt
+		                    ansible-playbook start_container.yaml --vault-password-file /tmp/.vault_pass.txt
+		                    rm -f /tmp/.vault_pass.txt
+		                """
+		
+		                sshPublisher(
+		                    publishers: [
+		                        sshPublisherDesc(
+		                            configName: 'ansible-server',
+		                            transfers: [
+		                                sshTransfer(
+		                                    execCommand: remoteCommand,
+		                                    execTimeout: 120000,
+		                                    flatten: false,
+		                                    makeEmptyDirs: false,
+		                                    noDefaultExcludes: false,
+		                                    patternSeparator: '[, ]+',
+		                                    remoteDirectory: '',
+		                                    remoteDirectorySDF: false,
+		                                    removePrefix: '',
+		                                    sourceFiles: ''
+		                                )
+		                            ],
+		                            verbose: true
+		                        )
+		                    ]
+		                )
+		            }
+		        }
+    		  }
+	    }
 
-        stage('Upload to Docker Hub') {
-            steps {
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'ansible-server',
-                            transfers: [
-                                sshTransfer(
-                                    cleanRemote: false,
-                                    excludes: '',
-                                    execCommand: '''
-                                        set -x
-                                        cd /opt/docker
-                                        docker image prune -a --force
-                                        docker build -t my_tomcat_image:v1 .
-                                        docker tag my_tomcat_image:v1 marleneraissa/my_tomcat_image_netflix:v1
-                                        docker push marleneraissa/my_tomcat_image_netflix:v1
-                                    ''',
-                                    execTimeout: 120000,
-                                    flatten: false,
-                                    makeEmptyDirs: false,
-                                    noDefaultExcludes: false,
-                                    patternSeparator: '[, ]+',
-                                    remoteDirectory: '',
-                                    remoteDirectorySDF: false,
-                                    removePrefix: '',
-                                    sourceFiles: ''
-                                )
-                            ],
-                            usePromotionTimestamp: false,
-                            useWorkspaceInPromotion: false,
-                            verbose: true
-                        )
-                    ]
-                )
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                withCredentials([
-                    string(
-                        credentialsId: 'id-vault-docker',  // ID de vos credentials dans Jenkins
-                        variable: 'VAULT_PASS'
-                    ) 
-                ]) 
-                {
-                script { 
-			echo "Vault password : ${env.VAULT_PASS.length()} characters"
-			
-			def remoteCommand = """
-	                    set -x
-	
-	                    # Vérification que la variable n’est pas vide
-	                    if [ -z "${env.VAULT_PASS}" ]; then
-	                        echo "ERROR: VAULT_PASS is empty!"
-	                        exit 1
-	                    fi
-	
-	                    cd /opt/playbooks
-	                    echo "${env.VAULT_PASS}" > /tmp/.vault_pass.txt
-	                    chmod 600 /tmp/.vault_pass.txt
-	                    ansible-playbook start_container.yaml --vault-password-file /tmp/.vault_pass.txt
-	                    rm -f /tmp/.vault_pass.txt
-	                """
-		       }
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'ansible-server',
-                            transfers: [
-                                sshTransfer(
-                                    cleanRemote: false,
-                                    excludes: '',
-                                    execCommand: remoteCommand,
-                                    execTimeout: 120000,
-                                    flatten: false,
-                                    makeEmptyDirs: false,
-                                    noDefaultExcludes: false,
-                                    patternSeparator: '[, ]+',
-                                    remoteDirectory: '',
-                                    remoteDirectorySDF: false,
-                                    removePrefix: '',
-                                    sourceFiles: ''
-                                )
-                            ],
-                            usePromotionTimestamp: false,
-                            useWorkspaceInPromotion: false,
-                            verbose: true
-                        )
-                    ]
-                )
-            }  
-            }
-        }
     }
 }
