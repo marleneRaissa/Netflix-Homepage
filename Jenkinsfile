@@ -122,9 +122,10 @@ pipeline {
                     string(
                         credentialsId: 'id-vault-docker',  // ID de vos credentials dans Jenkins
                         variable: 'VAULT_PASS'
-                    )
-                    script { echo "Vault password : ${VAULT_PASS}" } 
-                ]) {
+                    ) 
+                ]) 
+                {
+                script { echo "Vault password : ${VAULT_PASS}" }
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
