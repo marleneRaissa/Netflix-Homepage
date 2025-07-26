@@ -127,6 +127,22 @@ pipeline {
                 {
                 script { 
 			echo "Vault password : ${env.VAULT_PASS.length()} characters"
+			
+			def remoteCommand = """
+	                    set -x
+	
+	                    # Vérification que la variable n’est pas vide
+	                    if [ -z "${env.VAULT_PASS}" ]; then
+	                        echo "ERROR: VAULT_PASS is empty!"
+	                        exit 1
+	                    fi
+	
+	                    cd /opt/playbooks
+	                    echo "${env.VAULT_PASS}" > /tmp/.vault_pass.txt
+	                    chmod 600 /tmp/.vault_pass.txt
+	                    ansible-playbook start_container.yaml --vault-password-file /tmp/.vault_pass.txt
+	                    rm -f /tmp/.vault_pass.txt
+	                """
 		       }
                 sshPublisher(
                     publishers: [
@@ -136,20 +152,7 @@ pipeline {
                                 sshTransfer(
                                     cleanRemote: false,
                                     excludes: '',
-                                    execCommand: """
-                                        set -x
-                                        # Vérification que le fichier n'est pas vide
-                                        if [ ! -s "\${VAULT_PASS}" ]; then
-                                           echo "ERROR: Vault password file is empty!"
-                                           exit 1
-                                        fi
-
-					cd /opt/playbooks
-                                        echo "${env.VAULT_PASS}" > /tmp/.vault_pass.txt
-                                        chmod 600 /tmp/.vault_pass.txt
-                                        ansible-playbook start_container.yaml --vault-password-file /tmp/.vault_pass.txt
-                                        rm -f /tmp/.vault_pass.txt
-                                    """,
+                                    execCommand: remoteCommand,
                                     execTimeout: 120000,
                                     flatten: false,
                                     makeEmptyDirs: false,
