@@ -134,9 +134,10 @@ pipeline {
                                     excludes: '',
                                     execCommand: '''
                                         set -x
+                                        cd /opt/playbooks
                                         echo "$VAULT_PASS" > /tmp/.vault_pass.txt
                                         chmod 600 /tmp/.vault_pass.txt
-                                        ansible-playbook /opt/playbooks/start_container.yml --vault-password-file /tmp/.vault_pass.txt
+                                        ansible-playbook start_container.yml --vault-password-file /tmp/.vault_pass.txt
                                         rm -f /tmp/.vault_pass.txt
                                     ''',
                                     execTimeout: 120000,
