@@ -118,6 +118,12 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
+                withCredentials([
+                    string(
+                        credentialsId: 'id-vault-docker',  // ID de vos credentials dans Jenkins
+                        variable: 'VAULT_PASS'
+                    )
+                ]) {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
@@ -128,8 +134,10 @@ pipeline {
                                     excludes: '',
                                     execCommand: '''
                                         set -x
-                                        cd /opt/playbooks/
-                                        ansible-playbook start_container.yaml
+                                        echo "$VAULT_PASS" > /tmp/.vault_pass.txt
+                                        chmod 600 /tmp/.vault_pass.txt
+                                        sudo -u ansible-admin ansible-playbook /opt/playbooks/start_container.yml --vault-password-file /tmp/.vault_pass.txt -vvv >
+                                        rm -f /tmp/.vault_pass.txt
                                     ''',
                                     execTimeout: 120000,
                                     flatten: false,
@@ -148,6 +156,7 @@ pipeline {
                         )
                     ]
                 )
+            }  
             }
         }
     }
