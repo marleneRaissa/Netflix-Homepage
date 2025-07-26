@@ -4,9 +4,16 @@ pipeline {
     environment {
         LOCAL_BUILD_DIR = '/tmp/build-netflix-homepage'
     }
-    
+
+    tools {
+	// ajoutent automatiquement leurs chemins au PATH ( Doit correspondre à une installation configurée dans Jenkins)
+        maven 'apache-maven-4.0.0-rc-4'
+	jdk 'java-17.0.15'
+    }
+	
     stages {
-        stage('Checkout') {
+
+        stage('Checkout Git') {
             steps {
                 checkout([
                     $class: 'GitSCM',
@@ -16,7 +23,14 @@ pipeline {
                 ])
             }
         }
-        
+
+	stage('Initialize'){
+            steps{
+                echo "PATH = ${M2_HOME}/bin:${PATH}"
+                echo "M2_HOME = /opt/apache-maven-4.0.0-rc-4"
+            }
+        }
+	    
         stage('Build in Temporary Directory') {
             steps {
                 script {
