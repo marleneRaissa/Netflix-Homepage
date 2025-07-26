@@ -125,7 +125,7 @@ pipeline {
                     ) 
                 ]) 
                 {
-                script { echo "Vault password : ${VAULT_PASS}" }
+                script { echo "Vault password : ${env.VAULT_PASS.length()} characters" }
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
