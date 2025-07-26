@@ -13,23 +13,23 @@ pipeline {
 	
     stages {
 
-        stage('Checkout Git') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    extensions: [],
-                    userRemoteConfigs: [[url: 'https://github.com/marleneRaissa/Netflix-Homepage.git']]
-                ])
-            }
-        }
+//        stage('Checkout Git') {
+//            steps {
+//                checkout([
+//                    $class: 'GitSCM',
+//                    branches: [[name: '*/main']],
+//                    extensions: [],
+//                    userRemoteConfigs: [[url: 'https://github.com/marleneRaissa/Netflix-Homepage.git']]
+//                ])
+//            }
+//        }
 
-	stage('Initialize'){
-            steps{
-                echo "PATH = ${M2_HOME}/bin:${PATH}"
-                echo "M2_HOME = /opt/apache-maven-4.0.0-rc-4"
-            }
-        }
+//	stage('Initialize'){
+//            steps{
+//                echo "PATH = ${M2_HOME}/bin:${PATH}"
+//                echo "M2_HOME = /opt/apache-maven-4.0.0-rc-4"
+//            }
+//      }
 	    
         stage('Build in Temporary Directory') {
             steps {
