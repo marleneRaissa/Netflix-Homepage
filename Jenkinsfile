@@ -40,7 +40,7 @@ pipeline {
                         cp -r $WORKSPACE/* $LOCAL_BUILD_DIR/
                     '''
                     dir("${env.LOCAL_BUILD_DIR}") {
-                        sh 'clean install -DskipTests'
+                        sh 'mvn clean install -DskipTests'
                     }
                     // Copier le fichier WAR dans le workspace pour qu'il soit transféré ensuite
                     sh 'mkdir -p $WORKSPACE/target && cp $LOCAL_BUILD_DIR/target/*.war $WORKSPACE/target/'
