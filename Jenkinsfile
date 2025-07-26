@@ -140,7 +140,7 @@ pipeline {
                                         VAULT_PASS_FILE=$(mktemp /tmp/.vault_pass_XXXXXX.txt)
                                     
                                         # Écriture sécurisée du mot de passe
-                                        echo -n "$VAULT_PASS" > "\${VAULT_PASS_FILE}"
+                                        echo -n "${env.VAULT_PASS}" > "\${VAULT_PASS_FILE}"
                                         chmod 600 "\${VAULT_PASS_FILE}"
                                     
                                         # Vérification que le fichier n'est pas vide
