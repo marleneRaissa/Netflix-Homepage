@@ -11,7 +11,7 @@ pipeline {
 	jdk 'java-17.0.15'
     }
 	
-    stages {
+    stages {  //Declarative checkout is already configure in pipeline
 
 //        stage('Checkout Git') {
 //            steps {
@@ -24,7 +24,7 @@ pipeline {
 //            }
 //        }
 
-//	stage('Initialize'){
+//	stage('Initialize'){ // optional
 //            steps{
 //                echo "PATH = ${M2_HOME}/bin:${PATH}"
 //                echo "M2_HOME = /opt/apache-maven-4.0.0-rc-4"
@@ -81,25 +81,25 @@ pipeline {
         }
 	    
 	stage('Run Docker Container') {
-    		steps {
-		        withCredentials([
+    	    steps {
+		withCredentials([
 		            string(
 		                credentialsId: 'id-vault-docker',
 		                variable: 'VAULT_PASS'
 		            )
-		        ]) {
-			    script {
-		                def remoteCommand = """
-		                    echo "[INFO] Écriture du mot de passe vault dans un fichier temporaire..."
-		                    if [ -z "${VAULT_PASS}" ]; then
-		                        echo "ERROR: VAULT_PASS is empty!"
-		                        exit 1
-		                    fi
-		                    echo "${VAULT_PASS}" > /tmp/.vault_pass.txt
-		                    chmod 600 /tmp/.vault_pass.txt
-		                    ansible-playbook /opt/playbooks/start_container.yaml --vault-password-file /tmp/.vault_pass.txt
-		                    rm -f /tmp/.vault_pass.txt
-		                """
+		]) {
+		      script {
+		        def remoteCommand = """
+		            echo "[INFO] Écriture du mot de passe vault dans un fichier temporaire..."
+		            if [ -z "${VAULT_PASS}" ]; then
+		                echo "ERROR: VAULT_PASS is empty!"
+		            exit 1
+		            fi
+		            echo "${VAULT_PASS}" > /tmp/.vault_pass.txt
+		            chmod 600 /tmp/.vault_pass.txt
+		            ansible-playbook /opt/playbooks/start_container.yaml --vault-password-file /tmp/.vault_pass.txt
+		            rm -f /tmp/.vault_pass.txt
+		        """
 		
 		                sshPublisher(
 		                    publishers: [
@@ -124,9 +124,8 @@ pipeline {
 		                    ]
 		                )
 		            }
-		        }
-    		  }
-	    }
-
+		   }
+    	     }
+	}
     }
 }
