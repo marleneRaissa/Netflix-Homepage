@@ -86,6 +86,7 @@ pipeline {
 		                variable: 'VAULT_PASS'
 		            )
 		        ]) {
+			    script {
 		                def remoteCommand = """
 		                    echo "[INFO] Écriture du mot de passe vault dans un fichier temporaire..."
 		                    if [ -z "${VAULT_PASS}" ]; then
@@ -120,7 +121,7 @@ pipeline {
 		                        )
 		                    ]
 		                )
-		            
+		            }
 		        }
     		  }
 	    }
