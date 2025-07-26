@@ -125,7 +125,9 @@ pipeline {
                     ) 
                 ]) 
                 {
-                script { echo "Vault password : ${env.VAULT_PASS.length()} characters" }
+                script { 
+			echo "Vault password : ${env.VAULT_PASS.length()} characters"
+		       }
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
@@ -134,20 +136,20 @@ pipeline {
                                 sshTransfer(
                                     cleanRemote: false,
                                     excludes: '',
-                                    execCommand: '''
+                                    execCommand: """
                                         set -x
                                         # Vérification que le fichier n'est pas vide
-                                        if [ ! -s "\${env.VAULT_PASS}" ]; then
+                                        if [ ! -s "\${VAULT_PASS}" ]; then
                                            echo "ERROR: Vault password file is empty!"
                                            exit 1
                                         fi
 
-					                    cd /opt/playbooks
+					cd /opt/playbooks
                                         echo "${env.VAULT_PASS}" > /tmp/.vault_pass.txt
                                         chmod 600 /tmp/.vault_pass.txt
                                         ansible-playbook start_container.yaml --vault-password-file /tmp/.vault_pass.txt
                                         rm -f /tmp/.vault_pass.txt
-                                    ''',
+                                    """,
                                     execTimeout: 120000,
                                     flatten: false,
                                     makeEmptyDirs: false,
