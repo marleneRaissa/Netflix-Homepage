@@ -30,7 +30,7 @@ pipeline {
 //            }
 //      }
 	    
-        stage('Build in Temporary Directory') {
+        stage('Build and Test in Temporary Directory') {
             steps {
                 script {
                     sh '''
@@ -40,7 +40,7 @@ pipeline {
                         cp -r $WORKSPACE/* $LOCAL_BUILD_DIR/
                     '''
                     dir("${env.LOCAL_BUILD_DIR}") {
-                        sh 'mvn clean install'
+                        sh 'mvn clean install package'
                     }
                     // Copier le fichier WAR dans le workspace pour qu'il soit transféré ensuite
                     sh 'mkdir -p $WORKSPACE/target && cp $LOCAL_BUILD_DIR/target/*.war $WORKSPACE/target/'
